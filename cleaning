@@ -1,0 +1,63 @@
+import pandas as pd
+import os
+
+# Step 1: Load the dataset
+def load_data(file_path):
+    """
+    Load the dataset from the specified file path.
+    """
+    df = pd.read_csv(file_path)
+    return df
+
+# Step 2: Clean the dataset
+def clean_data(df):
+    """
+    Clean the dataset by handling missing values, converting data types, and dropping redundant columns.
+    """
+    # Convert 'Launch' and 'Arrival' to datetime
+    df['Launch'] = pd.to_datetime(df['Launch'], errors='coerce')
+    df['Arrival'] = pd.to_datetime(df['Arrival'], errors='coerce')
+
+    # Convert 'Launch_Year' and 'Arrival_Year' to integers
+    df['Launch_Year'] = df['Launch_Year'].astype(int)
+    df['Arrival_Year'] = df['Arrival_Year'].astype(int)
+
+    # Drop the redundant 'Outcome' column
+    df.drop(columns=['Outcome'], inplace=True)
+
+    return df
+
+# Step 3: Save the cleaned dataset to a personal library
+def save_to_library(df, library_path, file_name):
+    """
+    Save the cleaned dataset to the specified library path.
+    """
+    # Create the directory if it doesn't exist
+    os.makedirs(library_path, exist_ok=True)
+
+    # Save the cleaned dataset as a CSV file
+    file_path = os.path.join(library_path, file_name)
+    df.to_csv(file_path, index=False)
+    print(f"Cleaned dataset saved to: {file_path}")
+
+# Step 4: Main function
+def main():
+    # Define the file path of the original dataset
+    input_file_path = r"C:\Users\Admin\Downloads\finalized_dataset_engineered.csv"
+
+    # Define the library path and file name for the cleaned dataset
+    library_path = "C:\\Users\\Admin\\Downloads\\cleaned dataset final"
+    output_file_name = "cleaned_lunar_missions.csv"
+
+    # Load the dataset
+    df = load_data(input_file_path)
+
+    # Clean the dataset
+    cleaned_df = clean_data(df)
+
+    # Save the cleaned dataset to the personal library
+    save_to_library(cleaned_df, library_path, output_file_name)
+
+# Run the main function
+if __name__ == "__main__":
+    main()
